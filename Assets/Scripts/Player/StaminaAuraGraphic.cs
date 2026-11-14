@@ -2,9 +2,10 @@ using UnityEngine;
 
 namespace HoAndTheBells.Player
 {
-    /// <summary>Soft screen edges; capacity controls coverage, never the remaining reserve.</summary>
+    /// <summary>Soft screen edges whose coverage follows current stamina and remains anchored at the bottom when empty.</summary>
     public sealed class StaminaAuraGraphic : UnityEngine.UI.MaskableGraphic
     {
+        public const float EmptyCoverage = 0.04f;
         private float coverage = 0.5f;
         public float Coverage => coverage;
         public void SetAppearance(float extent, Color tint)

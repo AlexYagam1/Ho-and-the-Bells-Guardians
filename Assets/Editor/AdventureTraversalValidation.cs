@@ -9,6 +9,20 @@ namespace HoAndTheBells.Editor
 {
     public static class AdventureTraversalValidation
     {
+        [MenuItem("Tools/Ho and the Bells/Run Player and Traversal Validation")]
+        public static void RunFromEditor()
+        {
+            if (!Application.isPlaying)
+            {
+                Debug.LogError("Enter Play Mode before running player and traversal validation.");
+                return;
+            }
+
+            var playerReport = AdventurePlayerValidation.Run();
+            var traversalReport = Run();
+            Debug.Log("Adventure Player Validation:\n" + playerReport + "\nAdventure Traversal Validation:\n" + traversalReport);
+        }
+
         // Runtime-only visual fixture. Leaving Play Mode restores the real player.
         public static string PrepareAuraPreview(float maximum, float reserve)
         {
@@ -175,6 +189,17 @@ namespace HoAndTheBells.Editor
                         Check(probe.Mantle(Vector3.forward,out _,out _),"valid ledge detected");
                         for(int i=0;i<22;i++) motor.Simulate(Vector2.up,false,false,1f/60);
                         Check(probe.Feet.y>0.95f && motor.AirJumpAvailable,"mantle completes on top");
+                        var depletionLedge=Box("Depletion ledge",new Vector3(0,1,0),new Vector3(3,2,2));
+                        Reset(new Vector3(0,0.62f,-1.4f)); stamina.Consume(stamina.Current-4.1f);
+                        motor.Simulate(Vector2.up,false,false,1f/60);
+                        Check(motor.State==AdventurePlayerMotor.MovementState.Climbing,"engage before depleted ledge");
+                        for(int i=0;i<30 && motor.State==AdventurePlayerMotor.MovementState.Climbing;i++)
+                            motor.Simulate(Vector2.up,false,false,1f/60);
+                        Check(stamina.Current==0 && motor.State==AdventurePlayerMotor.MovementState.Mantling,"depletion step can start free mantle");
+                        for(int i=0;i<24 && motor.State==AdventurePlayerMotor.MovementState.Mantling;i++)
+                            motor.Simulate(Vector2.up,false,false,1f/60);
+                        Check(motor.State==AdventurePlayerMotor.MovementState.Locomotion && probe.Feet.y>1.95f,"free mantle completes after depletion");
+                        UnityEngine.Object.DestroyImmediate(depletionLedge); Physics.SyncTransforms();
                         ledge.transform.position=basePosition+new Vector3(0,1,0); ledge.transform.localScale=new Vector3(3,2,2); Physics.SyncTransforms();
                         Reset(new Vector3(0,0.05f,-1.4f)); Check(!probe.Mantle(Vector3.forward,out _,out _),"too high rejected");
                         ledge.transform.position=basePosition+new Vector3(0,0.5f,0); ledge.transform.localScale=new Vector3(0.2f,1,2); Physics.SyncTransforms();
@@ -192,13 +217,13 @@ namespace HoAndTheBells.Editor
                     }
                     finally { UnityEngine.Object.DestroyImmediate(ledge); Physics.SyncTransforms(); }
                 });
-                Test("unmarked wall rejected",()=>
+                Test("unmarked static wall is climbable",()=>
                 {
                     var wall=Box("Unmarked",new Vector3(0,5,0),new Vector3(3,10,1));
-                    try { Reset(new Vector3(0,1,-0.85f)); motor.Simulate(Vector2.up,false,false,1f/60); Check(motor.State==AdventurePlayerMotor.MovementState.Locomotion,"not climbing"); }
+                    try { Reset(new Vector3(0,1,-0.85f)); motor.Simulate(Vector2.up,false,false,1f/60); Check(motor.State==AdventurePlayerMotor.MovementState.Climbing,"unmarked wall should be climbable"); }
                     finally { UnityEngine.Object.DestroyImmediate(wall); }
                 });
-                Test("feedback pulse, exhaustion fade and control cancellation",()=>
+                Test("feedback pulse, recovery persistence and control cancellation",()=>
                 {
                     var wall=Box("Feedback wall",new Vector3(0,5,0),new Vector3(6,10,0.5f),true);
                     try
@@ -221,9 +246,13 @@ namespace HoAndTheBells.Editor
                         var position=player.transform.position;
                         motor.Simulate(Vector2.zero,false,false,1f/60);
                         feedback.AdvanceVisuals(0.01f);
-                        Check(stamina.Current==0 && motor.State==AdventurePlayerMotor.MovementState.Locomotion && player.transform.position.y<position.y && aura.color.a>0,"red persists briefly on fall");
+                        Check(stamina.Current==0 && motor.State==AdventurePlayerMotor.MovementState.Locomotion && player.transform.position.y<position.y && aura.color.a>0 && aura.Coverage>=StaminaAuraGraphic.EmptyCoverage,"red bottom edge persists on fall");
                         feedback.AdvanceVisuals(0.35f);
-                        Check(aura.color.a==0 && noise.AmplitudeGain==0,"exhaustion clears after fade");
+                        Check(aura.color.a>0 && noise.AmplitudeGain==0,"aura persists through recovery while camera shake fades");
+                        stamina.Restore(1f); feedback.AdvanceVisuals(0.05f);
+                        Check(aura.color.a>0 && aura.Coverage>=StaminaAuraGraphic.EmptyCoverage,"aura remains while reserve recovers");
+                        stamina.Restore(stamina.Maximum); feedback.AdvanceVisuals(0.2f);
+                        Check(aura.color.a==0,"aura fades after reserve is full");
                         Reset(new Vector3(0,2,-0.8f)); motor.Simulate(Vector2.up,false,false,1f/60);
                         motor.Simulate(Vector2.up,false,false,1f/60,false,false);
                         feedback.ClearFeedback();
@@ -236,9 +265,11 @@ namespace HoAndTheBells.Editor
                     Reset(new Vector3(-5,0.05f,-10));
                     foreach(float capacity in new[]{100f,150f,200f,250f})
                     {
-                        stamina.SetMaximumStamina(capacity); Check(stamina.Current==100,"maximum increase does not refill");
+                        float previousReserve=stamina.Current;
+                        stamina.SetMaximumStamina(capacity); Check(stamina.Current==previousReserve,"maximum increase does not refill");
+                        stamina.Restore(capacity-stamina.Current);
                         feedback.AdvanceVisuals(0.25f);
-                        Check(Mathf.Abs(aura.Coverage-Mathf.Clamp01(capacity/200f))<0.001f,"capacity coverage "+capacity);
+                        Check(Mathf.Abs(aura.Coverage-Mathf.Clamp01(stamina.Current/200f))<0.001f,"reserve coverage "+capacity);
                     }
                     stamina.Restore(150); Check(feedback.EvaluateColor(stamina.Current)==Color.white,"250 white");
                     Check(feedback.EvaluateColor(200)==Color.white && feedback.EvaluateColor(199)!=Color.white,"white threshold absolute");
@@ -248,10 +279,11 @@ namespace HoAndTheBells.Editor
                     Check(feedback.EvaluateColor(50).r>0.9f && feedback.EvaluateColor(50).g>0.2f,"orange");
                     feedback.AdvanceVisuals(0.25f); float coverage=aura.Coverage;
                     stamina.Consume(100); feedback.AdvanceVisuals(0.1f);
-                    Check(aura.Coverage==coverage,"consumption does not shrink coverage");
+                    Check(aura.Coverage<coverage,"consumption shrinks coverage toward the bottom");
                     Check(StaminaAuraGraphic.EdgeAlpha(new Vector2(0.5f,0.5f),1)==0,"center transparent");
                     Check(StaminaAuraGraphic.EdgeAlpha(new Vector2(0,0.75f),0.5f)==0,"upper half absent at 100");
                     Check(StaminaAuraGraphic.EdgeAlpha(new Vector2(0.5f,1),1)>0.9f,"top border at 200");
+                    Check(StaminaAuraGraphic.EdgeAlpha(new Vector2(0.5f,0),StaminaAuraGraphic.EmptyCoverage)>0,"minimum bottom edge visible at zero");
                     float reserve=stamina.Current; stamina.TickRecovery(true,0); feedback.AdvanceVisuals(0);
                     Check(stamina.Current==reserve,"pause freezes progress");
                     Check(player.GetComponentsInChildren<UnityEngine.UI.Slider>(true).Length==0,"no bar");

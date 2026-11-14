@@ -80,18 +80,22 @@ namespace HoAndTheBells.Player
                     }
                     MoveNormally(Vector2.zero, false, deltaTime); return;
                 }
-                if (stamina.Current <= 0f) { ExhaustionLocked = true; Detach(); MoveNormally(Vector2.zero, false, deltaTime); return; }
                 if (move.y > 0f && TryMantle(-wallNormal)) { AdvanceMantle(deltaTime); return; }
-                if (!probe.Wall(-wallNormal, true, out var contact) || Vector3.Angle(contact.normal, wallNormal) > 30f)
+                if (stamina.Current <= 0f) { ExhaustionLocked = true; Detach(); MoveNormally(Vector2.zero, false, deltaTime); return; }
+                if (!probe.Wall(-wallNormal, false, out var contact) || Vector3.Angle(contact.normal, wallNormal) > 30f)
                 { Detach(); MoveNormally(Vector2.zero, false, deltaTime); return; }
                 wallNormal = contact.normal;
                 stamina.Consume((move.y > 0f ? climbDrain : holdDrain) * deltaTime);
-                if (stamina.Current <= 0f)
-                { ExhaustionLocked = true; Detach(); MoveNormally(Vector2.zero, false, deltaTime); return; }
                 var tangent = Vector3.Cross(Vector3.up, wallNormal);
                 var velocity = -tangent * (move.x * lateralClimbSpeed)
                     + Vector3.up * (move.y * (move.y >= 0f ? climbSpeed : descendSpeed));
                 controller.Move((velocity - wallNormal * 0.5f) * deltaTime);
+                if (stamina.Current <= 0f)
+                {
+                    ExhaustionLocked = true;
+                    if (move.y > 0f && TryMantle(-wallNormal)) { AdvanceMantle(deltaTime); return; }
+                    Detach(); MoveNormally(Vector2.zero, false, deltaTime); return;
+                }
                 if (move.y < 0f && controller.isGrounded) Detach();
                 return;
             }
@@ -106,7 +110,7 @@ namespace HoAndTheBells.Player
             else if (controlEnabled && move.y > 0f && !requireForwardRelease && regrabTimer <= 0f)
             {
                 if (TryMantle(transform.forward)) { AdvanceMantle(deltaTime); return; }
-                if (!ExhaustionLocked && stamina.Current > 0f && probe.Wall(transform.forward, true, out var wall))
+                if (!ExhaustionLocked && stamina.Current > 0f && probe.Wall(transform.forward, false, out var wall))
                 {
                     wallNormal = wall.normal; verticalSpeed = 0f;
                     SetState(MovementState.Climbing);

@@ -20,7 +20,7 @@ Inclui `Navigate`, `Submit`, `Cancel`, `Point`, `Click`, `RightClick`, `MiddleCl
 
 - `AdventurePlayerInput` lê `Keyboard.current` e `Mouse.current` diretamente. O asset de ações acima continua preservado, mas não dirige o player atual.
 - WASD: andar; Shift esquerdo: correr; Espaço: salto no chão e um salto extra no ar; movimento do mouse: olhar.
-- W contra parede com `ClimbableSurface` inicia escalada. W/S sobe/desce e A/D move lateralmente; sem direção, fica agarrado consumindo estamina. Ctrl esquerdo solta; Espaço salta para fora se houver 15 pontos, ou apenas solta caso contrário.
+- W contra uma face sólida estática quase vertical inicia escalada sem exigir `ClimbableSurface`. W/S sobe/desce e A/D move lateralmente; sem direção, fica agarrado consumindo estamina. Ctrl esquerdo solta; Espaço salta para fora se houver 15 pontos, ou apenas solta caso contrário. Segurar W ao alcançar uma borda válida inicia uma subida automática gratuita.
 - Após soltar/saltar, é preciso liberar W e aguardar 0.25 s antes de reengatar. Ao esgotar, precisa tocar o chão. Encostar em paredes não recarrega o salto extra.
 - Avançar perto de uma quina alcançável sobe automaticamente, desde que haja apoio e espaço para a cápsula. Isso funciona também em sólidos não marcados.
 - Escape libera o cursor e limpa os comandos. Clique esquerdo na Game View recaptura, descartando o delta do mouse desse frame.

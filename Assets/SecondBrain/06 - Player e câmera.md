@@ -1,6 +1,6 @@
 # Player e câmera
 
-## Estado confirmado — 13/11/2026
+## Estado confirmado — 14/11/2026
 
 Base jogável desktop de primeira pessoa em `Assets/Prefabs/Player/AdventurePlayer.prefab`, integrada à [[02 - Cena atual]]. Input direto pelo novo Input System, sem chamadas ao input legado. Ver [[03 - Input e controles]] e [[04 - Base técnica]].
 
@@ -20,7 +20,7 @@ Base jogável desktop de primeira pessoa em `Assets/Prefabs/Player/AdventurePlay
 
 Direção artística definida pelo autor: cartoon vibrante, inspirado em BOTW, sem bloom. O perfil e os materiais da demonstração são uma base; cel shading, contornos e arte final não foram implementados.
 
-A aura de estamina é um overlay uGUI independente do perfil URP, sem barra: capacidade determina cobertura; reserva atual determina branco/verde/laranja/vermelho. Ver [[07 - Escalada e estamina]].
+A aura de estamina é um overlay uGUI independente do perfil URP: a reserva atual determina cobertura e cor, com uma faixa mínima no rodapé quando vazia. Ela permanece visível durante a recuperação e dissipa ao completar a capacidade. Ver [[07 - Escalada e estamina]].
 
 ## Ferramentas e reprodução
 

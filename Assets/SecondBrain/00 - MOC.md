@@ -13,7 +13,7 @@
 - [[02 - Cena atual]] — cena configurada para abrir e incluir nos builds.
 - [[03 - Input e controles]] — mapas, ações e bindings configurados.
 - [[06 - Player e câmera]] — player em primeira pessoa, Cinemachine, visual e validação.
-- [[07 - Escalada e estamina]] — quinas, pulo duplo, paredes escaláveis e aura de capacidade/cansaço.
+- [[07 - Escalada e estamina]] — escalada automática em faces quase verticais, subida de quinas, pulo duplo e aura ligada à reserva.
 
 ## Grafo
 

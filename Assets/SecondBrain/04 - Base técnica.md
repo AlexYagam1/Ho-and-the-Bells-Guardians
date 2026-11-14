@@ -20,7 +20,7 @@ Verifique `Packages/manifest.json` e `ProjectSettings/ProjectVersion.txt` antes 
 
 O servidor Pipeline só inicia depois que o Editor importa o pacote; se adicionado enquanto o Editor está aberto, pode ser necessário alternar para a janela do Unity e aguardar a importação.
 
-O catálogo de skills Unity instalado declara baseline Unity 6.3 LTS (6000.3), enquanto este projeto registra Unity 6.6.5f1. Trate as skills como orientação e confirme APIs e comportamentos dependentes da versão para o Editor do projeto.
+O catálogo de skills Unity instalado declara baseline Unity 6.3 LTS (6000.3), enquanto este projeto registra Unity 6000.6.5f1. Trate as skills como orientação e confirme APIs e comportamentos dependentes da versão para o Editor do projeto.
 
 ## Relações
 

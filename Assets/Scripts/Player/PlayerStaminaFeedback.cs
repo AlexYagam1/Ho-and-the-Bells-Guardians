@@ -22,19 +22,13 @@ namespace HoAndTheBells.Player
         private PlayerStamina stamina;
         private AdventurePlayerMotor motor;
         private AdventurePlayerInput input;
-        private float visibility, extent, extentFrom, extentTo, extentTime, pulseTime, exhaustionRemaining;
+        private float visibility, shakeVisibility, extent, extentFrom, extentTo, extentTime, pulseTime;
         public float VisualMaximum => visualMaximum;
         private void Awake()
         {
             stamina = GetComponent<PlayerStamina>(); motor = GetComponent<AdventurePlayerMotor>(); input = GetComponent<AdventurePlayerInput>();
             extent = extentFrom = extentTo = Mathf.Clamp01(stamina.Maximum / visualMaximum);
             extentTime = 0.25f;
-        }
-        private void OnEnable() { if (stamina != null) stamina.Exhausted += OnExhausted; }
-        private void OnExhausted()
-        {
-            if (motor.State == AdventurePlayerMotor.MovementState.Climbing)
-            { exhaustionRemaining = 0.35f; visibility = 1f; }
         }
         public Color EvaluateColor(float reserve)
         {
@@ -52,19 +46,18 @@ namespace HoAndTheBells.Player
         public void AdvanceVisuals(float dt)
         {
             if (dt <= 0f) return;
-            float targetExtent = Mathf.Clamp01(stamina.Maximum / visualMaximum);
+            float targetExtent = Mathf.Clamp01(stamina.Current / visualMaximum);
+            if (stamina.Current < stamina.Maximum)
+                targetExtent = Mathf.Max(StaminaAuraGraphic.EmptyCoverage, targetExtent);
             if (!Mathf.Approximately(targetExtent, extentTo))
             { extentFrom = extent; extentTo = targetExtent; extentTime = 0f; }
             extentTime = Mathf.Min(0.25f, extentTime + dt);
             extent = Mathf.Lerp(extentFrom, extentTo, Mathf.SmoothStep(0f, 1f, extentTime / 0.25f));
             bool climbing = motor.State == AdventurePlayerMotor.MovementState.Climbing;
-            bool exhausted = exhaustionRemaining > 0f;
-            if (exhausted)
-            {
-                exhaustionRemaining = Mathf.Max(0f, exhaustionRemaining - dt);
-                visibility = exhaustionRemaining / 0.35f;
-            }
-            else visibility = Mathf.MoveTowards(visibility, climbing ? 1f : 0f, dt / (climbing ? 0.15f : 0.2f));
+            bool staminaIncomplete = stamina.Current < stamina.Maximum;
+            bool shouldShow = climbing || staminaIncomplete;
+            visibility = Mathf.MoveTowards(visibility, shouldShow ? 1f : 0f, dt / (shouldShow ? 0.15f : 0.2f));
+            shakeVisibility = Mathf.MoveTowards(shakeVisibility, climbing ? 1f : 0f, dt / (climbing ? 0.15f : 0.2f));
             pulseTime += dt;
             float pulse = stamina.Current <= redThreshold
                 ? 1f - pulseIntensity * (0.5f + 0.5f * Mathf.Cos(pulseTime * pulseFrequency * Mathf.PI * 2f)) : 1f;
@@ -72,17 +65,16 @@ namespace HoAndTheBells.Player
             tint.a = auraOpacity * visibility * pulse;
             if (aura != null) aura.SetAppearance(extent, tint);
             float fatigue = 1f - Mathf.Clamp01(stamina.Current / orangeThreshold);
-            if (noise != null) noise.AmplitudeGain = fatigue * fatigue * shakeIntensity * visibility;
+            if (noise != null) noise.AmplitudeGain = fatigue * fatigue * shakeIntensity * shakeVisibility;
         }
         public void ClearFeedback()
         {
-            visibility = exhaustionRemaining = 0f;
+            visibility = shakeVisibility = 0f;
             if (noise != null) noise.AmplitudeGain = 0f;
             if (aura != null) aura.SetAppearance(extent, Color.clear);
         }
         private void OnDisable()
         {
-            if (stamina != null) stamina.Exhausted -= OnExhausted;
             ClearFeedback();
         }
     }
