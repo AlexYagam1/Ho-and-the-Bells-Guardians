@@ -26,12 +26,12 @@ namespace HoAndTheBells.Editor
             Undo.RegisterCreatedObjectUndo(player, "Create adventure player");
             player.tag = "Player";
             var cc = player.AddComponent<CharacterController>();
-            cc.height = 1.8f; cc.radius = 0.3f; cc.center = Vector3.up * 0.9f;
+            cc.height = 1.42f; cc.radius = 0.3f; cc.center = Vector3.up * 0.9f;
             cc.stepOffset = 0.3f; cc.slopeLimit = 45f; cc.skinWidth = 0.03f; cc.minMoveDistance = 0f;
             player.AddComponent<AdventurePlayerInput>();
             var look = player.AddComponent<AdventurePlayerLook>();
             player.AddComponent<AdventurePlayerMotor>();
-            var eye = Child("Eye Target", player.transform, Vector3.up * 1.65f);
+            var eye = Child("Eye Target", player.transform, Vector3.up * 1.32f);
             var body = Child("Body Target", player.transform, Vector3.up * 0.9f);
             var serializedLook = new SerializedObject(look);
             serializedLook.FindProperty("eyeTarget").objectReferenceValue = eye;
@@ -51,7 +51,7 @@ namespace HoAndTheBells.Editor
             Undo.RecordObject(camera, "Configure camera");
             camera.tag = "MainCamera"; camera.allowHDR = true; camera.fieldOfView = 70f;
             camera.nearClipPlane = 0.05f; camera.farClipPlane = 300f;
-            camera.transform.SetPositionAndRotation(player.transform.position + Vector3.up * 1.65f, Quaternion.identity);
+            camera.transform.SetPositionAndRotation(player.transform.position + Vector3.up * 1.32f, Quaternion.identity);
             var brain = camera.GetComponent<CinemachineBrain>() ?? Undo.AddComponent<CinemachineBrain>(camera.gameObject);
             brain.UpdateMethod = CinemachineBrain.UpdateMethods.LateUpdate;
             brain.BlendUpdateMethod = CinemachineBrain.BrainUpdateMethods.LateUpdate;

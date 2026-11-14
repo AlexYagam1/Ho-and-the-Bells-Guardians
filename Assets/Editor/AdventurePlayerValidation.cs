@@ -40,25 +40,25 @@ namespace HoAndTheBells.Editor
             {
                 foreach (int fps in new[] {30,60,120})
                 {
-                    Reset(new Vector3(2,0.05f,-8));
+                    Reset(new Vector3(1,0.05f,-8));
                     var start = go.transform.position;
                     for (int i=0;i<fps;i++) motor.Simulate(Vector2.up,false,false,1f/fps);
                     Check(Mathf.Abs(go.transform.position.z-start.z-4f)<0.03f, "walk 4 m at " + fps + " Hz");
-                    Reset(new Vector3(2,0.05f,-8)); start = go.transform.position;
+                    Reset(new Vector3(1,0.05f,-8)); start = go.transform.position;
                     for (int i=0;i<fps;i++) motor.Simulate(Vector2.up,true,false,1f/fps);
                     Check(Mathf.Abs(go.transform.position.z-start.z-6.5f)<0.03f, "sprint 6.5 m at " + fps + " Hz");
-                    Reset(new Vector3(2,0.05f,-8)); start = go.transform.position;
+                    Reset(new Vector3(1,0.05f,-8)); start = go.transform.position;
                     for (int i=0;i<fps;i++) motor.Simulate(Vector2.one,false,false,1f/fps);
                     var delta = go.transform.position-start; delta.y=0;
                     Check(Mathf.Abs(delta.magnitude-4f)<0.03f,"normalized diagonal at " + fps + " Hz");
-                    Reset(new Vector3(2,0.05f,-8)); start=go.transform.position;
+                    Reset(new Vector3(1,0.05f,-8)); start=go.transform.position;
                     float highest=start.y;
                     for (int i=0;i<fps*2;i++)
                     {
                         motor.Simulate(Vector2.zero,false,i==0 || i==fps/4,1f/fps);
                         highest=Mathf.Max(highest,go.transform.position.y);
                     }
-                    Check(Mathf.Abs(highest-start.y-1.2f)<0.04f && motor.IsGrounded,"jump height, no midair jump, landing at " + fps + " Hz");
+                    Check(highest-start.y>1.8f && motor.IsGrounded,"double jump and landing at " + fps + " Hz");
                     go.transform.rotation=Quaternion.identity;
                     for(int i=0;i<fps;i++) look.ApplyLook(new Vector2(600f/fps,0));
                     Check(Mathf.Abs(Mathf.DeltaAngle(go.transform.eulerAngles.y,72f))<0.05f,"mouse displacement independent of " + fps + " Hz");
@@ -68,10 +68,10 @@ namespace HoAndTheBells.Editor
                 Check(go.transform.position.x<11.5f,"wall blocks controller");
                 Reset(new Vector3(-5,0.05f,-4)); float ceilingMax=go.transform.position.y;
                 for(int i=0;i<120;i++) {motor.Simulate(Vector2.zero,false,i==0,1f/60);ceilingMax=Mathf.Max(ceilingMax,go.transform.position.y);}
-                Check(ceilingMax<0.5f && motor.IsGrounded,"ceiling cancels upward velocity and player lands");
+                Check(ceilingMax<2.2f-(cc.center.y+cc.height/2f)+0.06f && motor.IsGrounded,"ceiling cancels upward velocity and player lands");
                 Reset(new Vector3(-5,0.05f,-0.5f));
                 for(int i=0;i<75;i++) motor.Simulate(Vector2.up,false,false,1f/60);
-                Check(go.transform.position.y>1.1f,"climbs 0.25 m steps");
+                Check(go.GetComponent<PlayerTraversalProbe>().Feet.y>1.1f,"climbs 0.25 m steps");
                 Reset(new Vector3(5,0.05f,-1));
                 for(int i=0;i<100;i++) motor.Simulate(Vector2.up,false,false,1f/60);
                 Check(go.transform.position.y>1.2f,"climbs 15 degree ramp");

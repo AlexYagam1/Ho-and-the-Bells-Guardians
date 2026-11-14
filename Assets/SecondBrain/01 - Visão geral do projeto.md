@@ -13,6 +13,8 @@ O projeto contém uma base jogável de aventura e puzzles em primeira pessoa: pl
 
 A direção informada pelo autor é cartoon 3D, próxima de cel shading, com cores vibrantes inspiradas em BOTW e sem bloom. Esta entrega configura pós-processamento; shader toon e arte final continuam pendentes. Alguns momentos futuros serão em terceira pessoa; por enquanto há somente preparação arquitetural.
 
+Os personagens controlados serão gatos pequenos. O player atual já inclui pulo duplo, subida automática de quinas e escalada em paredes marcadas, com estamina indicada exclusivamente por uma aura nas bordas da tela. Ver [[07 - Escalada e estamina]].
+
 Essa descrição é um retrato do repositório no momento da última revisão; confirme os arquivos antes de usá-la como estado atual.
 
 ## Relações

@@ -13,6 +13,7 @@
 - [[02 - Cena atual]] — cena configurada para abrir e incluir nos builds.
 - [[03 - Input e controles]] — mapas, ações e bindings configurados.
 - [[06 - Player e câmera]] — player em primeira pessoa, Cinemachine, visual e validação.
+- [[07 - Escalada e estamina]] — quinas, pulo duplo, paredes escaláveis e aura de capacidade/cansaço.
 
 ## Grafo
 
@@ -24,6 +25,10 @@ graph TD
     MOC --> CENA[ Cena atual ]
     MOC --> INPUT[ Input e controles ]
     MOC --> PLAYER[ Player e câmera ]
+    MOC --> CLIMB[ Escalada e estamina ]
+    CLIMB --> PLAYER
+    CLIMB --> INPUT
+    CLIMB --> CENA
     PLAYER --> CENA
     PLAYER --> INPUT
     PLAYER --> TEC

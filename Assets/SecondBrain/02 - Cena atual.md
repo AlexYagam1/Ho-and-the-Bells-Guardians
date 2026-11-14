@@ -11,6 +11,7 @@
 - A câmera principal usa CinemachineBrain em LateUpdate e pós-processamento URP/SMAA High. O Global Volume referencia `Assets/Settings/AdventureVibrantProfile.asset`; o perfil original foi preservado.
 - Luz direcional quente, sombras suaves e iluminação ambiente Trilight dão suporte ao visual vibrante. Os materiais da demonstração são URP/Lit, não shaders toon.
 - Abra a cena e entre em Play Mode; clique na Game View para capturar o cursor. Ver controles e validação em [[06 - Player e câmera]].
+- `Traversal Test Area` acrescenta `Climbable Wall` azul em (8, 2.25, -3), bloco de quina dourado em (3, 0.5, -3), parede não escalável, borda estreita e borda com teto bloqueado. A parede azul tem `ClimbableSurface` e 4.5 m de altura; os demais objetos demonstram restrições de acesso. Ver [[07 - Escalada e estamina]].
 
 ## Relações
 

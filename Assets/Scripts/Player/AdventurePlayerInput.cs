@@ -10,6 +10,7 @@ namespace HoAndTheBells.Player
         public Vector2 Look { get; private set; }
         public bool Sprint { get; private set; }
         public bool JumpPressed { get; private set; }
+        public bool DropPressed { get; private set; }
         public bool HasControl => controlEnabled && captured && Application.isFocused;
         private bool controlEnabled = true;
         private bool captured;
@@ -46,6 +47,7 @@ namespace HoAndTheBells.Player
             Look = mouse.delta.ReadValue();
             Sprint = keyboard.leftShiftKey.isPressed;
             JumpPressed = keyboard.spaceKey.wasPressedThisFrame;
+            DropPressed = keyboard.leftCtrlKey.wasPressedThisFrame;
         }
 
         private void Capture()
@@ -64,7 +66,7 @@ namespace HoAndTheBells.Player
             Clear();
         }
 
-        private void Clear() { Move = Look = Vector2.zero; Sprint = JumpPressed = false; }
+        private void Clear() { Move = Look = Vector2.zero; Sprint = JumpPressed = DropPressed = false; }
         private void OnApplicationFocus(bool focused) { if (!focused) Release(); }
         private void OnDisable() => Release();
     }
