@@ -6,8 +6,11 @@
 - Renderização: Universal Render Pipeline (URP), pacote `com.unity.render-pipelines.universal` na versão **17.6.0**.
 - Input System: `com.unity.inputsystem` **1.20.0**; asset de ações em [[03 - Input e controles]].
 - Unity Pipeline: `com.unity.pipeline` **1.0.0-pre.1**, instalado para permitir controle do Editor aberto via Unity CLI/MCP.
+- Unity CLI atualizado para **1.0.0**; conexão local ao Editor via Pipeline confirmada.
+- Cinemachine efetivamente resolvido pelo Unity: **6.6.0**, origem `BuiltIn`, com APIs `Unity.Cinemachine` (`CinemachineCamera`/`CinemachineBrain`). A solicitação inicial de 3.1.7 foi resolvida pelo Editor para 6.6.0; manifesto e lock foram alinhados à versão efetiva. Não há downgrade do Editor.
 - Outros pacotes declarados incluem AI Navigation 2.0.15, Timeline 6.6.0, uGUI 2.6.0 e Visual Scripting 1.9.12.
-- Assets estão organizados atualmente em `Assets/Scenes`, `Assets/Settings` e `Assets/SecondBrain`.
+- Assets incluem `Scenes`, `Settings`, `SecondBrain`, `Scripts/Player`, `Prefabs/Player`, `Materials/AdventureDemo` e ferramentas em `Editor`.
+- HDR ativo no URP usado pela cena; o perfil vibrante usa Neutral, saturação +15, contraste +10 e bloom zero. Ver [[06 - Player e câmera]].
 - A cena listada para build é [[02 - Cena atual]].
 - Skills e roteador de desenvolvimento de jogos instalados por projeto: [[05 - Skills de desenvolvimento]].
 

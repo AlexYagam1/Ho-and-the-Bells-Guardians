@@ -4,9 +4,13 @@
 
 - `Assets/Scenes/SampleScene.unity` é a única cena encontrada em `Assets/Scenes`.
 - Ela está habilitada em `ProjectSettings/EditorBuildSettings.asset`, portanto é a cena atualmente listada para o build.
-- Os objetos nomeados encontrados na cena são `Main Camera`, `Directional Light`, `Global Volume` e `MCP Test Cube`. Também há objetos sem nome no YAML serializado.
+- Os objetos principais são `Main Camera`, `Directional Light`, `Global Volume`, `MCP Test Cube`, `Adventure Player` e `Adventure Test Area`.
 - Um cubo de teste chamado `MCP Test Cube` foi inserido via Unity CLI e salvo em `SampleScene.unity`; ele valida a conexão do Pipeline e não representa conteúdo de gameplay confirmado.
-- A cena contém configurações de iluminação e navegação; não há evidência nesta nota de uma área de jogo ou de lógica de gameplay.
+- `Adventure Player` instancia `Assets/Prefabs/Player/AdventurePlayer.prefab` em (0, 0.05, -7), olhando para +Z.
+- A área de teste tem chão de 24 x 24 m, paredes, cinco degraus de 0.25 m, rampa de 15 graus, patamar e teto baixo para testar salto e colisão. O cubo original foi preservado.
+- A câmera principal usa CinemachineBrain em LateUpdate e pós-processamento URP/SMAA High. O Global Volume referencia `Assets/Settings/AdventureVibrantProfile.asset`; o perfil original foi preservado.
+- Luz direcional quente, sombras suaves e iluminação ambiente Trilight dão suporte ao visual vibrante. Os materiais da demonstração são URP/Lit, não shaders toon.
+- Abra a cena e entre em Play Mode; clique na Game View para capturar o cursor. Ver controles e validação em [[06 - Player e câmera]].
 
 ## Relações
 

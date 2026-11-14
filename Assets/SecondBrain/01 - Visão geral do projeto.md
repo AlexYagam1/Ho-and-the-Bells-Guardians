@@ -9,7 +9,9 @@
 
 ## Estado observado
 
-O conteúdo versionado em `Assets` é ainda um esqueleto: há a cena `SampleScene`, configurações do URP e um asset de ações do Input System. Não foram encontrados scripts C#, prefabs ou modelos de gameplay em `Assets` no levantamento desta nota.
+O projeto contém uma base jogável de aventura e puzzles em primeira pessoa: player com caminhada, corrida, salto e visão pelo mouse, prefab reutilizável, Cinemachine e área de testes na `SampleScene`. Os sistemas de puzzles e interação ainda não foram implementados. Ver [[06 - Player e câmera]].
+
+A direção informada pelo autor é cartoon 3D, próxima de cel shading, com cores vibrantes inspiradas em BOTW e sem bloom. Esta entrega configura pós-processamento; shader toon e arte final continuam pendentes. Alguns momentos futuros serão em terceira pessoa; por enquanto há somente preparação arquitetural.
 
 Essa descrição é um retrato do repositório no momento da última revisão; confirme os arquivos antes de usá-la como estado atual.
 

@@ -12,6 +12,7 @@
 
 - [[02 - Cena atual]] — cena configurada para abrir e incluir nos builds.
 - [[03 - Input e controles]] — mapas, ações e bindings configurados.
+- [[06 - Player e câmera]] — player em primeira pessoa, Cinemachine, visual e validação.
 
 ## Grafo
 
@@ -22,6 +23,10 @@ graph TD
     MOC --> SKILLS[ Skills de desenvolvimento ]
     MOC --> CENA[ Cena atual ]
     MOC --> INPUT[ Input e controles ]
+    MOC --> PLAYER[ Player e câmera ]
+    PLAYER --> CENA
+    PLAYER --> INPUT
+    PLAYER --> TEC
     P --> CENA
     P --> TEC
     SKILLS --> TEC
