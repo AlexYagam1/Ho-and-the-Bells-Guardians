@@ -31,6 +31,8 @@ A aura de estamina é um overlay uGUI independente do perfil URP: a reserva atua
 
 ## Validação realizada
 
+- Em 17/11/2026, uma cópia de teste do player salva na SampleScene tinha o motor desativado e uma câmera Cinemachine ativa. A cópia foi removida da cena salva. A instância `Adventure Player` mantém o spawn em (0, 0.05, -7), voltado para +Z. Em Play Mode, o controlador assentou no chão e a câmera principal seguiu a `First Person Cinemachine` do player correto. Veja [[02 - Cena atual]].
+
 - Compilação dos scripts sem erros; corrigida a chamada de busca obsoleta identificada durante os testes.
 - Testes com passos de simulação de 1/30, 1/60 e 1/120 segundo: caminhada, corrida, diagonal normalizada, pulo duplo, rejeição de terceiro salto, aterrissagem e sensibilidade por deslocamento do mouse passaram. São testes de timestep, não benchmark de FPS renderizado. Cenários novos de escalada e aura em [[07 - Escalada e estamina]].
 - Paredes, teto baixo, degraus, rampa, queda do patamar e limites de pitch passaram.

@@ -10,10 +10,10 @@
 
 ## Conteúdo do jogo
 
-- [[02 - Cena atual]] — cena configurada para abrir e incluir nos builds.
+- [[02 - Cena atual]] — SampleScene e acesso aos distritos de escalada, parkour, escadas e pulo duplo.
 - [[03 - Input e controles]] — mapas, ações e bindings configurados.
-- [[06 - Player e câmera]] — player em primeira pessoa, Cinemachine, visual e validação.
-- [[07 - Escalada e estamina]] — escalada automática em faces quase verticais, subida de quinas, pulo duplo e aura ligada à reserva.
+- [[06 - Player e câmera]] — ponto de spawn, câmera em primeira pessoa e validação.
+- [[07 - Escalada e estamina]] — agarre com W durante saltos, transição para patamares e testes em peças de faces mistas.
 
 ## Grafo
 
@@ -37,6 +37,7 @@ graph TD
     SKILLS --> TEC
     SKILLS --> INPUT
     CENA --> TEC
+    CENA --> CLIMB
     INPUT --> TEC
     INPUT --> CENA
 ```

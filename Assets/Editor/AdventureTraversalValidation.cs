@@ -223,6 +223,95 @@ namespace HoAndTheBells.Editor
                     try { Reset(new Vector3(0,1,-0.85f)); motor.Simulate(Vector2.up,false,false,1f/60); Check(motor.State==AdventurePlayerMotor.MovementState.Climbing,"unmarked wall should be climbable"); }
                     finally { UnityEngine.Object.DestroyImmediate(wall); }
                 });
+                Test("airborne wall grab requires forward intent", () =>
+                {
+                    var wall = Box("Air Grab Wall", new Vector3(0, 1.5f, 0), new Vector3(5, 3, 1));
+                    try
+                    {
+                        const float dt = 1f / 60f;
+                        Reset(new Vector3(0, 0.05f, -1.15f));
+                        Check(!probe.Wall(Vector3.forward, false, out _), "starts outside probe reach");
+                        motor.Simulate(Vector2.up, false, true, dt);
+                        Check(motor.State == AdventurePlayerMotor.MovementState.Climbing, "grab on takeoff after advancing into reach");
+                        Check(motor.AirJumpAvailable, "ground jump and wall grab preserve the air jump");
+
+                        Reset(new Vector3(0, 0.05f, -0.87f));
+                        motor.Simulate(Vector2.zero, false, true, dt);
+                        for (int i = 0; i < 26; i++)
+                            motor.Simulate(Vector2.zero, false, false, dt);
+                        float feetAtApex = probe.Feet.y;
+                        for (int i = 0; i < 4; i++)
+                            motor.Simulate(Vector2.zero, false, false, dt);
+                        Check(probe.Feet.y < feetAtApex, "player is descending");
+                        Check(motor.State == AdventurePlayerMotor.MovementState.Locomotion, "no idle air grab");
+                        motor.Simulate(new Vector2(1, 1), false, false, dt);
+                        Check(motor.State == AdventurePlayerMotor.MovementState.Climbing, "diagonal grab on descent");
+
+                        wall.transform.localScale = new Vector3(0.22f, 2, 1);
+                        wall.transform.position = basePosition + new Vector3(0, 1, 0);
+                        Reset(new Vector3(0, 1.42f, -0.87f));
+                        motor.Simulate(Vector2.up, false, false, dt);
+                        Check(motor.State == AdventurePlayerMotor.MovementState.Climbing, "grab with only the lower probe on the face");
+                        for (int i = 0; i < 8; i++)
+                            motor.Simulate(Vector2.zero, false, false, dt);
+                        Check(motor.State == AdventurePlayerMotor.MovementState.Climbing, "hold below an unwalkably narrow edge");
+                    }
+                    finally { UnityEngine.Object.DestroyImmediate(wall); Physics.SyncTransforms(); }
+                });
+                var districts = GameObject.Find("Traversal Districts");
+                foreach (string pieceName in new[] { "Parede vertical e patamar", "Parede 80 graus e rampa 20 graus" })
+                {
+                    foreach (int fps in new[] { 30, 60, 120 })
+                    {
+                        Test(pieceName + " mantle and depletion at " + fps + " Hz", () =>
+                        {
+                            Check(districts != null, "load SampleScene with the test districts");
+                            var source = districts.transform.Find("Escalada/" + pieceName);
+                            Check(source != null && source.GetComponents<Collider>().Length == 1
+                                && source.GetComponent<MeshCollider>() != null
+                                && source.GetComponent<ClimbableSurface>() == null, "one unmarked mesh collider");
+
+                            var piece = UnityEngine.Object.Instantiate(source.gameObject, basePosition, Quaternion.identity, environment.transform);
+                            try
+                            {
+                                const float platformHeight = 2.45f;
+                                float dt = 1f / fps;
+                                var start = new Vector3(0, 0.65f, -0.34f);
+                                Reset(start);
+
+                                int approachSteps = 0;
+                                motor.Simulate(Vector2.up, false, false, dt);
+                                Check(motor.State == AdventurePlayerMotor.MovementState.Climbing, "grab the face");
+                                while (motor.State == AdventurePlayerMotor.MovementState.Climbing && approachSteps < fps * 2)
+                                {
+                                    motor.Simulate(Vector2.up, false, false, dt);
+                                    approachSteps++;
+                                }
+                                Check(motor.State == AdventurePlayerMotor.MovementState.Mantling && approachSteps >= 2, "transition at the lip");
+
+                                for (int attempt = 0; attempt < 2; attempt++)
+                                {
+                                    if (attempt == 1)
+                                    {
+                                        Reset(start);
+                                        for (int step = 0; step < approachSteps - 1; step++)
+                                            motor.Simulate(Vector2.up, false, false, dt);
+                                        Check(motor.State == AdventurePlayerMotor.MovementState.Climbing, "last climbing step before the lip");
+                                        stamina.Consume(stamina.Current - 12.5f * dt);
+                                        motor.Simulate(Vector2.up, false, false, dt);
+                                        Check(stamina.Current == 0f && motor.State == AdventurePlayerMotor.MovementState.Mantling,
+                                            "the last paid step reaches the lip");
+                                    }
+                                    for (int step = 0; step < fps && motor.State == AdventurePlayerMotor.MovementState.Mantling; step++)
+                                        motor.Simulate(Vector2.up, false, false, dt);
+                                    Check(motor.IsGrounded && motor.AirJumpAvailable && Mathf.Abs(probe.Feet.y - platformHeight) < 0.08f,
+                                        "settles on the top with the air jump restored");
+                                }
+                            }
+                            finally { UnityEngine.Object.DestroyImmediate(piece); Physics.SyncTransforms(); }
+                        });
+                    }
+                }
                 Test("feedback pulse, recovery persistence and control cancellation",()=>
                 {
                     var wall=Box("Feedback wall",new Vector3(0,5,0),new Vector3(6,10,0.5f),true);

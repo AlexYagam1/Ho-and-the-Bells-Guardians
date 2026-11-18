@@ -7,6 +7,7 @@
 - Input System: `com.unity.inputsystem` **1.20.0**; asset de ações em [[03 - Input e controles]].
 - Unity Pipeline: `com.unity.pipeline` **1.0.0-pre.1**, instalado para permitir controle do Editor aberto via Unity CLI/MCP.
 - Unity CLI atualizado para **1.0.0**; conexão local ao Editor via Pipeline confirmada.
+- ProBuilder: `com.unity.probuilder` **6.1.4**, resolvido pelo registro Unity e usado para malhas editáveis dos distritos em [[02 - Cena atual]].
 - Cinemachine efetivamente resolvido pelo Unity: **6.6.0**, origem `BuiltIn`, com APIs `Unity.Cinemachine` (`CinemachineCamera`/`CinemachineBrain`). A solicitação inicial de 3.1.7 foi resolvida pelo Editor para 6.6.0; manifesto e lock foram alinhados à versão efetiva. Não há downgrade do Editor.
 - Outros pacotes declarados incluem AI Navigation 2.0.15, Timeline 6.6.0, uGUI 2.6.0 e Visual Scripting 1.9.12.
 - Assets incluem `Scenes`, `Settings`, `SecondBrain`, `Scripts/Player`, `Prefabs/Player`, `Materials/AdventureDemo` e ferramentas em `Editor`.

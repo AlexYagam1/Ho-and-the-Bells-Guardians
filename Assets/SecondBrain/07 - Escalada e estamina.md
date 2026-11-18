@@ -9,18 +9,18 @@ Implementado no prefab `AdventurePlayer` e na `SampleScene` via Unity CLI/Pipeli
 - `AdventurePlayerMotor.MovementState`: Locomotion, Climbing e Mantling. O motor é o único responsável pelo deslocamento com CharacterController.Move; expõe `State`, `StateChanged`, `IsGrounded`, `AirJumpAvailable` e `ExhaustionLocked`.
 - `Simulate(move, sprint, jumpPressed, deltaTime, dropPressed = false, controlEnabled = true)` mantém a assinatura antiga compatível por parâmetros opcionais. Input runtime usa `Keyboard.current`/`Mouse.current` e Ctrl esquerdo para soltar.
 - Qualquer collider sólido estático em `solidMask` pode ser escalado sem `ClimbableSurface`, se sua face estiver até 15 graus da vertical e voltada ao player. Paredes com Rigidbody e tetos não são aceitos. Objetos animados por Transform não são suportados nesta entrega. `ClimbableSurface` continua disponível, mas não é requisito do player.
-- W contra uma face elegível inicia escalada. W/S sobe/desce a 1.2/1.5 m/s; A/D move a 1 m/s. Direção diagonal normalizada. Movimento usa normal da parede/eixo vertical, independentemente do olhar. Sem input direcional, mantém contato.
+- W contra uma face elegível inicia escalada no chão e no ar, com busca após o deslocamento do salto. A direção do avanço inclui o componente lateral. W/S sobe/desce a 1.2/1.5 m/s e A/D move a 1 m/s. Os eixos de subida e deslocamento lateral acompanham o plano da face após o agarre, independentemente do olhar. Sem input direcional, mantém contato.
 - Ctrl solta; Espaço custa 15 para saltar para fora (impulso horizontal 3 m/s amortecido em 0.2 s e impulso vertical do salto normal). Sem saldo, apenas solta. O salto aéreo disponível é preservado.
 - Após soltar ou saltar, exige liberação de W e cooldown de 0.25 s. Perder contato causa queda; mudança de normal acima de 30 graus cancela em vez de contornar quinas de 90 graus.
 - Escape, perda de foco e bloqueio externo cancelam escalada/mantle e limpam feedback; gravidade continua. `timeScale = 0` suspende simulação, consumo e progressão visual.
 
 ## Subida de quina e pulo duplo
 
-- `PlayerTraversalProbe` detecta parede, topo e apoio sob quatro pontos da cápsula. Funciona em sólidos mesmo sem marcador.
+- `PlayerTraversalProbe` sonda a parede no centro e nas extremidades do eixo da cápsula. Usa a primeira face sólida de cada raio e sua normal, inclusive em peças sem marcador ou com faces de inclinações diferentes. A sondagem inferior ajuda a manter o agarre quando o centro passa da quina. Para transpor a borda, verifica o topo e o apoio sob quatro pontos do perímetro da cápsula.
 - Alcance até dois raios a partir do eixo da cápsula, acrescido de skin; altura de topo até 85% da altura efetiva. Degraus menores ficam com stepOffset.
 - Exige topo dentro do slopeLimit, apoio suficiente, cápsula livre no destino e percurso livre. Usa queries com triggers ignorados e filtra o próprio player.
 - Segurar W perto de uma borda válida inicia Mantle sem custo de estamina. Se o último passo pago zerar a reserva, o motor ainda verifica e inicia o Mantle se o topo já for alcançável; sem topo válido, desprende e cai. Não permite continuar escalando normalmente sem reserva.
-- Mantle leva 0.3 s: eleva e depois avança, com easing, verificando cada trecho. Bloqueio cancela; ao concluir, assenta a cápsula no topo e recupera o salto extra. Uma transição iniciada termina mesmo se a reserva se esgotar.
+- Mantle leva 0.3 s e verifica a elevação e o avanço em trechos separados, mesmo quando executados no mesmo frame. Antes de começar, falta de apoio ou de folga impede a transição. Um bloqueio no percurso cancela a transição. Ao assentar a cápsula no topo, o motor recupera o salto extra. Uma transição iniciada termina mesmo se a reserva se esgotar.
 - Um salto no chão e um extra no ar; sair andando de uma borda também deixa um salto aéreo disponível. O salto extra redefine velocidade vertical para altura 1.2 m, sem acumular velocidade. Só aterrissagem ou fim de mantle recarregam; contato com parede não recarrega.
 
 ## Reserva e API para itens futuros
@@ -67,6 +67,13 @@ Implementado no prefab `AdventurePlayer` e na `SampleScene` via Unity CLI/Pipeli
 - Unity **6000.6.5f1**, na `SampleScene`, em Play Mode: os 23 cenários de `AdventurePlayerValidation.Run()` e os 11 grupos de `AdventureTraversalValidation.Run()` passaram, incluindo parede estática sem marcador, mantle ao esgotar estamina, faixa inferior em zero e persistência da aura durante a recuperação.
 - Console sem erros ou avisos após a execução. Play Mode encerrado e a cena voltou ao estado de edição.
 - `git diff --check` passou.
+
+## Validação da escalada e dos distritos — 17/11/2026
+
+- Antes da correção, a reprodução em Play Mode confirmou que o agarre falhava quando o centro da cápsula já estava acima de uma borda estreita. Na mesma peça, começar abaixo e subir até perder o raio central provocava desprendimento enquanto a cápsula ainda alcançava a parede pela parte inferior.
+- No Unity 6000.6.5f1, passaram os 23 cenários do player, a validação de input e os 18 grupos de escalada. Os casos novos incluem captura durante o salto, aproximação diagonal na descida, ausência de captura sem W, agarre perto de borda estreita e transição em cada uma das duas peças ProBuilder a 30/60/120 Hz, inclusive com estamina zerada no último passo.
+- As rotas foram simuladas com o motor do player na SampleScene em Play Mode. A passagem norte, a rampa de 20°, a subida de borda e os dois saltos de parkour e a subida e descida da escada funcionaram. A 4 m/s, o salto simples chegou à plataforma do vão de 2 m. No vão de 3,5 m, o salto simples ficou abaixo do patamar e o salto duplo chegou ao topo.
+- A cena reabriu com sete malhas ProBuilder editáveis, um MeshCollider válido por peça e zero scripts ausentes. O caminho até os distritos está em [[02 - Cena atual]].
 
 ## Relações
 

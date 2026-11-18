@@ -29,12 +29,19 @@ namespace HoAndTheBells.Player
         public bool Wall(Vector3 direction, bool markedOnly, out RaycastHit hit)
         {
             direction = Vector3.ProjectOnPlane(direction, Vector3.up).normalized;
-            if (!Cast(Feet + Vector3.up * Height * 0.5f, direction, Radius * 2f + Skin, out hit)) return false;
-            if (Mathf.Abs(hit.normal.y) > Mathf.Sin(wallTiltLimit * Mathf.Deg2Rad)) return false;
-            if (hit.rigidbody != null) return false; // Moving surfaces are deliberately unsupported.
-            if (Vector3.Dot(-direction, hit.normal) < 0.7f) return false;
-            var marker = hit.collider.GetComponentInParent<ClimbableSurface>();
-            return !markedOnly || (marker != null && marker.isActiveAndEnabled);
+            var feet = Feet;
+            return WallAt(feet, Height * 0.5f, direction, markedOnly, out hit)
+                || WallAt(feet, Radius, direction, markedOnly, out hit)
+                || WallAt(feet, Height - Radius, direction, markedOnly, out hit);
+        }
+
+        private bool WallAt(Vector3 feet, float height, Vector3 direction, bool markedOnly, out RaycastHit hit)
+        {
+            if (!Cast(feet + Vector3.up * height, direction, Radius * 2f + Skin, out hit)
+                || hit.rigidbody != null
+                || Mathf.Abs(hit.normal.y) > Mathf.Sin(wallTiltLimit * Mathf.Deg2Rad)
+                || Vector3.Dot(-direction, Vector3.ProjectOnPlane(hit.normal, Vector3.up).normalized) < 0.7f) return false;
+            return !markedOnly || hit.collider.GetComponentInParent<ClimbableSurface>() is { isActiveAndEnabled: true };
         }
         public bool Mantle(Vector3 direction, out Vector3 lift, out Vector3 destination)
         {
@@ -42,9 +49,16 @@ namespace HoAndTheBells.Player
             direction = Vector3.ProjectOnPlane(direction, Vector3.up).normalized;
             float step = capsule.stepOffset * Mathf.Abs(transform.lossyScale.y);
             float maxRise = Height * mantleHeightRatio;
-            if (!Cast(Feet + Vector3.up * (step + Skin + 0.02f), direction, Radius * 2f + Skin, out var wall)) return false;
-            if (wall.rigidbody != null || Mathf.Abs(wall.normal.y) > Mathf.Sin(wallTiltLimit * Mathf.Deg2Rad)) return false;
-            var sample = Feet + direction * (wall.distance + Radius + Skin * 2f);
+            var feet = Feet;
+            float wallHeight = step + Skin + 0.02f;
+            if (!WallAt(feet, wallHeight, direction, false, out var wall)) return false;
+
+            // Measure the footprint across the face, including the retreat of an inclined lip.
+            direction = Vector3.ProjectOnPlane(-wall.normal, Vector3.up).normalized;
+            var edge = new Vector3(wall.point.x, feet.y, wall.point.z);
+            float faceRetreat = Mathf.Max(0f, wall.normal.y) * (maxRise - wallHeight)
+                / Vector3.Dot(-direction, wall.normal);
+            var sample = edge + direction * (faceRetreat + Radius + Skin * 2f);
             if (!Cast(sample + Vector3.up * (maxRise + Skin), Vector3.down, maxRise - step, out var top)) return false;
             if (top.rigidbody != null || Vector3.Angle(top.normal, Vector3.up) > capsule.slopeLimit) return false;
             float rise = top.point.y - Feet.y;
