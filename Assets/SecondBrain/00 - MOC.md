@@ -14,6 +14,7 @@
 - [[03 - Input e controles]] — mapas, ações e bindings configurados.
 - [[06 - Player e câmera]] — ponto de spawn, câmera em primeira pessoa e validação.
 - [[07 - Escalada e estamina]] — agarre com W durante saltos, transição para patamares e testes em peças de faces mistas.
+- [[08 - Gatos NPCs]] — quatro modelos animados com mochilas, passeio autônomo e visitas às escadas.
 
 ## Grafo
 
@@ -26,6 +27,9 @@ graph TD
     MOC --> INPUT[ Input e controles ]
     MOC --> PLAYER[ Player e câmera ]
     MOC --> CLIMB[ Escalada e estamina ]
+    MOC --> GATOS[ Gatos NPCs ]
+    GATOS --> CENA
+    GATOS --> TEC
     CLIMB --> PLAYER
     CLIMB --> INPUT
     CLIMB --> CENA

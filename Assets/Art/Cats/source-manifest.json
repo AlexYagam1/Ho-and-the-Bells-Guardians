@@ -1,0 +1,290 @@
+{
+  "meshes": [
+    {
+      "name": "AlçaBolsa",
+      "min": [
+        -1.1904560327529907,
+        -0.986818790435791,
+        1.3660914897918701
+      ],
+      "max": [
+        0.7764531373977661,
+        0.7623029947280884,
+        3.0853066444396973
+      ],
+      "vertices": 80,
+      "groups": [
+        "Belly",
+        "Torso",
+        "Sholder.L",
+        "Sholder.R",
+        "Butt.L",
+        "Legg.L",
+        "Butt.R",
+        "Legg.R"
+      ]
+    },
+    {
+      "name": "AlçaBolsa.001",
+      "min": [
+        -1.374369502067566,
+        -0.986818790435791,
+        1.3248988389968872
+      ],
+      "max": [
+        0.7764531373977661,
+        0.8482999801635742,
+        3.0853066444396973
+      ],
+      "vertices": 80,
+      "groups": [
+        "Belly",
+        "Torso",
+        "Sholder.L",
+        "Sholder.R",
+        "Butt.L",
+        "Legg.L",
+        "Butt.R",
+        "Legg.R"
+      ]
+    },
+    {
+      "name": "Bolsa",
+      "min": [
+        -0.8395063281059265,
+        0.21294403076171875,
+        1.3393268585205078
+      ],
+      "max": [
+        0.8395063281059265,
+        1.6502214670181274,
+        2.9815733432769775
+      ],
+      "vertices": 26,
+      "groups": [
+        "Belly",
+        "Torso"
+      ]
+    },
+    {
+      "name": "Bolsa.001",
+      "min": [
+        -0.8395063281059265,
+        0.21294403076171875,
+        1.3393268585205078
+      ],
+      "max": [
+        0.8395063281059265,
+        1.6502214670181274,
+        2.9815733432769775
+      ],
+      "vertices": 26,
+      "groups": [
+        "Belly",
+        "Torso"
+      ]
+    },
+    {
+      "name": "G.Calda Fina",
+      "min": [
+        -2.3345139026641846,
+        -1.1756337881088257,
+        0.012154102325439453
+      ],
+      "max": [
+        2.322098731994629,
+        3.386378765106201,
+        5.230715274810791
+      ],
+      "vertices": 697,
+      "groups": [
+        "Belly",
+        "Torso",
+        "Head",
+        "Ear.L",
+        "Ear.R",
+        "Sholder.L",
+        "BackArm.L",
+        "Hand.L",
+        "Sholder.R",
+        "BackArm.R",
+        "Hand.R",
+        "Butt.L",
+        "Legg.L",
+        "Fut.L",
+        "Butt.R",
+        "Legg.R",
+        "Fut.R",
+        "Base",
+        "Tail.base",
+        "Tail.1",
+        "Tail.2",
+        "Moustache.L",
+        "Moustache.R"
+      ]
+    },
+    {
+      "name": "G.Calda Grossa",
+      "min": [
+        -2.3345139026641846,
+        -1.1756337881088257,
+        0.012154102325439453
+      ],
+      "max": [
+        2.322098731994629,
+        3.4273691177368164,
+        5.230715751647949
+      ],
+      "vertices": 697,
+      "groups": [
+        "Belly",
+        "Torso",
+        "Head",
+        "Ear.L",
+        "Ear.R",
+        "Sholder.L",
+        "BackArm.L",
+        "Hand.L",
+        "Sholder.R",
+        "BackArm.R",
+        "Hand.R",
+        "Butt.L",
+        "Legg.L",
+        "Fut.L",
+        "Butt.R",
+        "Legg.R",
+        "Fut.R",
+        "Base",
+        "Tail.base",
+        "Tail.1",
+        "Tail.2",
+        "Moustache.L",
+        "Moustache.R"
+      ]
+    },
+    {
+      "name": "G.Calda Grossa-Gordo",
+      "min": [
+        -2.3345139026641846,
+        -1.215985894203186,
+        0.012154102325439453
+      ],
+      "max": [
+        2.322098731994629,
+        3.4273691177368164,
+        5.230715751647949
+      ],
+      "vertices": 713,
+      "groups": [
+        "Belly",
+        "Torso",
+        "Head",
+        "Ear.L",
+        "Ear.R",
+        "Sholder.L",
+        "BackArm.L",
+        "Hand.L",
+        "Sholder.R",
+        "BackArm.R",
+        "Hand.R",
+        "Butt.L",
+        "Legg.L",
+        "Fut.L",
+        "Butt.R",
+        "Legg.R",
+        "Fut.R",
+        "Base",
+        "Tail.base",
+        "Tail.1",
+        "Tail.2",
+        "Moustache.L",
+        "Moustache.R"
+      ]
+    },
+    {
+      "name": "G.Calda Reta",
+      "min": [
+        -2.3345139026641846,
+        -1.1756337881088257,
+        0.012154102325439453
+      ],
+      "max": [
+        2.322098731994629,
+        3.453385591506958,
+        5.230715751647949
+      ],
+      "vertices": 689,
+      "groups": [
+        "Belly",
+        "Torso",
+        "Head",
+        "Ear.L",
+        "Ear.R",
+        "Sholder.L",
+        "BackArm.L",
+        "Hand.L",
+        "Sholder.R",
+        "BackArm.R",
+        "Hand.R",
+        "Butt.L",
+        "Legg.L",
+        "Fut.L",
+        "Butt.R",
+        "Legg.R",
+        "Fut.R",
+        "Base",
+        "Tail.base",
+        "Tail.1",
+        "Tail.2",
+        "Moustache.L",
+        "Moustache.R"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "name": "Idle",
+      "range": [
+        0.0,
+        48.0
+      ]
+    },
+    {
+      "name": "Run",
+      "range": [
+        1.0,
+        48.0
+      ]
+    },
+    {
+      "name": "Walk",
+      "range": [
+        0.0,
+        48.0
+      ]
+    }
+  ],
+  "fps": 24,
+  "weight_repairs": {
+    "AlçaBolsa": [
+      59,
+      64
+    ],
+    "AlçaBolsa.001": [
+      59,
+      64
+    ],
+    "G.Calda Fina": [
+      77
+    ],
+    "G.Calda Grossa": [
+      77
+    ],
+    "G.Calda Grossa-Gordo": [
+      77
+    ],
+    "G.Calda Reta": [
+      77
+    ]
+  }
+}

@@ -32,6 +32,7 @@ As duas peças de escalada são editáveis no ProBuilder. Cada peça usa um úni
 - Ações de input disponíveis, sem lógica de jogo associada confirmada: [[03 - Input e controles]].
 - Configurações de renderização: [[04 - Base técnica]].
 - Índice: [[00 - MOC]].
+- `Cat NPC Demo` adiciona quatro gatos com mochilas, passeio autônomo e visitas às duas escadas. Configuração, testes e limitações em [[08 - Gatos NPCs]].
 
 ## Próximas informações a registrar
 
